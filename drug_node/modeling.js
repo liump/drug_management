@@ -3,16 +3,16 @@ const knex = require('knex')
 
 // 创建数据库连接对象
 const MyDB = knex({
+	// 指定knex要操作的数据库为MySQL
 	client: 'mysql',
 	version: '8.0',
-	// 指定knex要操作的数据库为MySQL
 	connection: {
 		host: '127.0.0.1',
 		// 设置数据库所在的服务器地址
 		port: 3306,
 		user: 'user1',
 		// 设置登录数据库的用户名
-		password: 'mysql@123',
+		password: 'mysql@123456',
 		// 设置登录数据库的密码
 		database: 'db_drug'
 		// 设置要操作的数据库名称
@@ -28,18 +28,13 @@ MyDB.schema.hasTable('tb_user')  // 查看数据库中是否已经存在 tb_user
 				// 创建 tb_user 表      
 				// 将 id 设置为类型为 bigInt 的主键字段      
 				table.bigInteger('id').primary();
-				table.string('userNmae');
-				// 将 userNmae 设置为字符串类型的字段  
-				table.string('userPassword');
-				// 将 userPassword 设置为字符串类型的字段   
-				table.string('role');
-				// 将 role 设置为字符串类型的字段   
-				table.string('createTime');
-				// 将 createTime 设置为字符串类型的字段  
-				table.string('lastLoginTime');
-				// 将 lastLoginTime 设置为字符串类型的字段   
-				table.string('remark');
-				// 将 remark 设置为字符串类型的字段  
+				table.string('userName'); // 用户名
+				table.string('userPassword'); // 密码
+				table.string('nickName'); // 昵称
+				table.string('role'); // 权限
+				table.string('createTime'); // 创建时间
+				table.string('lastLoginTime'); // 最后登录时间
+				table.string('remark'); // 备注
 			});
 		}
 	});
@@ -52,10 +47,10 @@ MyDB.schema.hasTable('tb_role')
 		if (exists == false) {
 			return MyDB.schema.createTable('tb_role', function (table) {
 				table.bigInteger('id').primary();
-				table.string('roleName');
-				table.string('roleCode');
-				table.string('createTime');
-				table.string('remark');
+				table.string('roleName'); // 权限名称
+				table.string('roleCode'); // 权限码
+				table.string('createTime'); // 创建时间
+				table.string('remark'); // 备注
 			});
 		}
 	});
@@ -136,15 +131,10 @@ MyDB.schema.hasTable('tb_drug_inventory_alert')
 		if (exists == false) {
 			return MyDB.schema.createTable('tb_drug_inventory_alert', function (table) {
 				table.bigInteger('id').primary();
-				table.string('approvalNumber'); // 批准文号
 				table.string('drugName'); // 产品名称
-				table.string('dosage'); // 剂型
-				table.string('specifications'); // 规格
-				table.string('holder'); // 上市许可持有人
-				table.string('productionUnit'); // 生产单位
 				table.string('drugCode'); // 药品编码
-				table.string('total'); // 出库数量
-				table.string('createTime'); // 出库时间
+				table.string('total'); // 预警数量
+				table.string('createTime'); // 创建时间
 				table.string('remark'); // 药品编码备注
 			});
 		}

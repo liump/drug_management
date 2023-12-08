@@ -12,11 +12,14 @@ let tableHeader = ref([
     { id: 5, label: '上市许可持有人', prop: 'holder' },
     { id: 6, label: '生产单位', prop: 'productionUnit' },
     { id: 7, label: '药品编码', prop: 'drugCode' },
-    { id: 8, label: '备注', prop: 'remark' },
+    { id: 8, label: '出库数量', prop: 'total' },
+    { id: 9, label: '货架位置', prop: 'location' },
+    { id: 10, label: '出库时间', prop: 'createTime' },
+    // { id: 11, label: '备注', prop: 'remark' },
 ])
 
 let tableData = ref([
-    { id: 1, approvalNumber: '1', drugName: '2', dosage: '3', specifications: '4', holder: '5', productionUnit: '6', drugCode: '7', remark: '8' },
+    { id: 1, approvalNumber: '1', drugName: '2', dosage: '3', specifications: '4', holder: '5', productionUnit: '6', drugCode: '7', total: '8', location: '9', createTime: '10', remark: '11' },
 ])
 let total = ref(0)
 let queryParams = ref({
@@ -35,15 +38,12 @@ function handleCurrentChange(params) {
 
 <template>
     <div class="page">
-        <el-row justify="space-between">
+        <el-row>
             <el-form :model="formData" label-suffix=":">
                 <el-form-item label="关键字">
                     <el-input v-model="formData.search"></el-input>
                 </el-form-item>
             </el-form>
-            <el-upload :show-file-list="false" action="/api/drugCatelogue/upload">
-                <el-button type="primary">上传药品本位码</el-button>
-            </el-upload>
         </el-row>
         <el-table :data="tableData" class="page-table">
             <el-table-column v-for="(item, index) in tableHeader" :key="index" :prop="item.prop" :label="item.label" />

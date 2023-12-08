@@ -5,18 +5,14 @@ let formData = ref({
     search: ''
 })
 let tableHeader = ref([
-    { id: 1, label: '批准文号', prop: 'approvalNumber' },
-    { id: 2, label: '产品名称', prop: 'drugName' },
-    { id: 3, label: '剂型', prop: 'dosage' },
-    { id: 4, label: '规格', prop: 'specifications' },
-    { id: 5, label: '上市许可持有人', prop: 'holder' },
-    { id: 6, label: '生产单位', prop: 'productionUnit' },
-    { id: 7, label: '药品编码', prop: 'drugCode' },
-    { id: 8, label: '备注', prop: 'remark' },
+    { id: 1, label: '权限名称', prop: 'roleName' },
+    { id: 2, label: '权限码', prop: 'roleCode' },
+    { id: 3, label: '创建时间', prop: 'createTime' },
+    { id: 4, label: '备注', prop: 'remark' },
 ])
 
 let tableData = ref([
-    { id: 1, approvalNumber: '1', drugName: '2', dosage: '3', specifications: '4', holder: '5', productionUnit: '6', drugCode: '7', remark: '8' },
+    { id: 1, roleName: '1', roleCode: '2', createTime: '3', remark: '4' },
 ])
 let total = ref(0)
 let queryParams = ref({
@@ -35,15 +31,12 @@ function handleCurrentChange(params) {
 
 <template>
     <div class="page">
-        <el-row justify="space-between">
+        <el-row>
             <el-form :model="formData" label-suffix=":">
                 <el-form-item label="关键字">
                     <el-input v-model="formData.search"></el-input>
                 </el-form-item>
             </el-form>
-            <el-upload :show-file-list="false" action="/api/drugCatelogue/upload">
-                <el-button type="primary">上传药品本位码</el-button>
-            </el-upload>
         </el-row>
         <el-table :data="tableData" class="page-table">
             <el-table-column v-for="(item, index) in tableHeader" :key="index" :prop="item.prop" :label="item.label" />

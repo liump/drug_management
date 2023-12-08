@@ -8,7 +8,39 @@ const router = createRouter({
     {
       path: '/',
       name: 'layout',
-      component: Layout
+      component: Layout,
+      children: [
+        {
+          path: '/drugCatelogue',
+          name: 'drugCatelogue',
+          component: () => import('@/views/DrugCatelogue/DrugCatelogue.vue')
+        },
+        {
+          path: '/drugInput',
+          name: 'drugInput',
+          component: () => import('@/views/DrugInput/DrugInput.vue')
+        },
+        {
+          path: '/drugOutput',
+          name: 'drugOutput',
+          component: () => import('@/views/DrugOutput/DrugOutput.vue')
+        },
+        {
+          path: '/inventoryAlert',
+          name: 'inventoryAlert',
+          component: () => import('@/views/InventoryAlert/InventoryAlert.vue')
+        },
+        {
+          path: '/userManagement',
+          name: 'userManagement',
+          component: () => import('@/views/UserManagement/UserManagement.vue')
+        },
+        {
+          path: '/userRole',
+          name: 'userRole',
+          component: () => import('@/views/UserRole/UserRole.vue')
+        },
+      ]
     },
     {
       path: '/about',
