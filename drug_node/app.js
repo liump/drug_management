@@ -10,17 +10,17 @@ require('./modeling.js')
 // 药品分类模块API
 require('./DrugCatelogue.js')
 
-app.get('/', (req, res) => {    
+app.get('/', (req, res) => {
   let defaultJson = {
     code: 200,
     msg: 'node express server'
   }
   let resJson = JSON.stringify(defaultJson)
   res.send(resJson);
-}) 
+})
 
-	// 设置当前服务启动时要监听的端口以及要执行的动作
-app.listen(port, () => {    
+// 设置当前服务启动时要监听的端口以及要执行的动作
+app.listen(port, () => {
   console.log(`请访问http://localhost:${port}/，按“Ctrl+C”键终止服务！`);
 })
 
