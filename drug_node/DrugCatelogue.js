@@ -13,7 +13,9 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     const uniqueSuffix = dayjs().format('YYYY-MM-DD')
     // drugCode
-    let fileName = `drugCode_${uniqueSuffix}`
+    let originalname = file.originalname.split('.')
+    // originalname[0]: drugCode, originalname[1]: xlsx
+    let fileName = `${originalname[0]}_${uniqueSuffix}.${originalname[1]}`
     cb(null, fileName)
   }
 });
@@ -32,10 +34,9 @@ app.post('/drugCatelogue/upload', upload.single('file'), async (req, res, next) 
     console.log(`File ${file.filename} is successfully uploaded.`);
     // 读取 excel
     let loadData = await handleLoadData(file.filename)
-    
 
     // 插入数据表
-    handleInsertData(loadData.excelData)
+    await handleInsertData(loadData.excelData)
 
     return res.status(200).send({ code: 200, msg: '上传成功！' });
   }
