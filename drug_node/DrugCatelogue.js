@@ -3,6 +3,7 @@
  */
 const app = require('./app.js')
 const multer = require('multer');
+const dayjs = require('dayjs');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -10,23 +11,28 @@ const storage = multer.diskStorage({
     cb(null, 'uploads/')
   },
   filename: function (req, file, cb) {
-    // const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-    cb(null, file.originalname)
+    const uniqueSuffix = dayjs().format('YYYY-MM-DD')
+    // drugCode
+    let fileName = `drugCode_${uniqueSuffix}`
+    cb(null, fileName)
   }
 });
 const upload = multer({ storage });
 
 // 药品分类 上传药品本位码
-app.post('/drugCatelogue/upload', upload.single('file'), function (req, res, next) {
+app.post('/drugCatelogue/upload', upload.single('file'), async (req, res, next) => {
   const file = req.file;
 
   if (!file) {
     return res.status(400).send('No file uploaded!');
   } else {
-    console.log(`File ${file.originalname} is successfully uploaded.`);
+    // 清空数据表 // 调用函数并传入需要清空的表格名称
+    await truncateTable('tb_drug_catelogue');
+
+    console.log(`File ${file.filename} is successfully uploaded.`);
     // 读取 excel
-    let loadData = handleLoadData(file.originalname)
-    // TODO： 清空数据表
+    let loadData = await handleLoadData(file.filename)
+    
 
     // 插入数据表
     handleInsertData(loadData.excelData)
@@ -34,6 +40,15 @@ app.post('/drugCatelogue/upload', upload.single('file'), function (req, res, nex
     return res.status(200).send({ code: 200, msg: '上传成功！' });
   }
 });
+// 删除指定表格中所有记录
+async function truncateTable(tableName) {
+  try {
+      await MyDB(tableName).truncate();
+      console.log(`成功清空 ${tableName} 表`);
+  } catch (error) {
+      console.error(`清空 ${tableName} 表失败`, error);
+  }
+}
 
 /**
  * upload end
@@ -63,7 +78,11 @@ function handleLoadData(fileName) {
 /**
  * read excel end
  */
-const MyDB = require('./modeling.js')
+
+/**
+ * get excel data start
+ */
+const MyDB = require('./MyDB.js')
 
 function handleInsertData(excelData) {
 
@@ -80,48 +99,57 @@ function handleInsertData(excelData) {
       drugCode: el[7],
       remark: el[8]
     }
-
-    // if (el[0]) {
-    //   obj.id = el[0]
-    // }
-    // if (el[1]) {
-    //   obj.approvalNumber = el[1]
-    // }
-    // if (el[2]) {
-    //   obj.drugName = el[2]
-    // }
-    // if (el[3]) {
-    //   obj.dosage = el[3]
-    // }
-    // if (el[4]) {
-    //   obj.specifications = el[4]
-    // }
-    // if (el[5]) {
-    //   obj.holder = el[5]
-    // }
-    // if (el[6]) {
-    //   obj.productionUnit = el[6]
-    // }
-    // if (el[7]) {
-    //   obj.drugCode = el[7]
-    // }
-    // if (el[8]) {
-    //   obj.remark = el[8]
-    // }
     return obj
   })
-  console.log("🚀 ~ file: DrugCatelogue.js:87 ~ insertData ~ insertData:", insertData)
 
   // 执行
   MyDB('tb_drug_catelogue')
     .insert(insertData)
-    .then(() => console.log("Data inserted successfully."))
-    .catch((error) => console.log(`Error occurred while inserting the data: ${error}`));
+    .then(response => {
+      console.log("🚀 ~ file: DrugCatelogue.js:97 ~ handleInsertData ~ response: insert success")
+    })
+    .catch((error) => {
+      console.error("🚀 ~ file: DrugCatelogue.js:100 ~ handleInsertData ~ response: insert error")
+    });
 
 }
 
-// list query
-app.get('/drugCatelogue', {}, function (req, res, next) {
+/**
+ * get excel data end
+ */
 
-  // return res.status(200).send({ code: 200, msg: '上传成功！' });
+// list query
+app.get('/drugCatelogue', function (req, res, next) {
+  // get query params, like { pageNo: '1', pageSize: '10', drugName: '片' }
+  let queryParams = req.query || {}
+  let currentParams = queryParams.pageNo - 1
+  let sizeParams = queryParams.pageSize
+  let resData = {
+    pageNo: currentParams + 1,
+    pageSize: sizeParams,
+    data: [],
+    total: 0
+  }
+  // select list for pageNo， pageSize and drugName
+  MyDB('tb_drug_catelogue')
+    .select('*')
+    // .where(queryParams)
+    .whereLike('drugName', `%${queryParams.drugName || ''}%`)
+    .limit(sizeParams)
+    .offset(currentParams * sizeParams)
+    .then(async (response) => {
+      resData.data = response
+
+      let total = await MyDB('tb_drug_catelogue').count()
+      resData.total = total[0][`count(*)`] || 0
+
+      return res.status(200).send({ code: 200, msg: 'success', data: resData });
+
+    })
+    .catch((error) => {
+      console.log("🚀 ~ file: DrugCatelogue.js:126 ~ error:", error)
+      return res.status(400).send({ code: 400, msg: error, data: resData });
+    });
+
+
 });
