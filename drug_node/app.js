@@ -9,6 +9,14 @@ module.exports = app;
 require('./modeling.js')
 // 药品分类模块API
 require('./DrugCatelogue.js')
+// 入库
+require('./DrugInput.js')
+// 出库
+require('./DrugOutput.js')
+// 用户表
+require('./DrugUser.js')
+// 权限表
+require('./DrugRole.js')
 
 app.get('/', (req, res) => {
   let defaultJson = {

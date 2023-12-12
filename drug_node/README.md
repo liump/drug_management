@@ -1,5 +1,9 @@
 # drug project
 
+## node token
+
+通过 JWT 方式构建，参考 [JWT]('https://blog.csdn.net/small_white_123/article/details/121462359')
+
 ## PM2
 
 pm2 start app.js
@@ -16,6 +20,6 @@ connect EPERM //./pipe/rpc.sock
 [PM2] Spawning PM2 daemon with pm2_home=C:\Users\liump\.pm2
 
 ## 参考资料
-[knex CRUD](https://blog.csdn.net/m0_51810668/article/details/131277990)
-[dayjs](https://dayjs.fenxianglu.cn/category/parse.html#%E5%AE%9E%E4%BE%8B)
-[PM2](https://pm2.keymetrics.io/docs/usage/quick-start/)
+[knex CRUD]('https://blog.csdn.net/m0_51810668/article/details/131277990')
+[dayjs]('https://dayjs.fenxianglu.cn/category/parse.html#%E5%AE%9E%E4%BE%8B')
+[PM2]('https://pm2.keymetrics.io/docs/usage/quick-start/')
