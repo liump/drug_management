@@ -59,6 +59,8 @@ require('./DrugRole.js')
 require('./DrugAlert.js')
 // 登录
 require('./Login.js')
+// 大屏
+require('./DrugBigScreen.js')
 
 
 app.get('/', (req, res) => {
