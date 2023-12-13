@@ -24,6 +24,7 @@ connect EPERM //./pipe/rpc.sock
 [PM2] Spawning PM2 daemon with pm2_home=C:\Users\liump\.pm2
 
 ## 参考资料
+[knex 官方文档]('https://knexjs.org/guide/query-builder.html')
 [knex CRUD]('https://blog.csdn.net/m0_51810668/article/details/131277990')
 [dayjs]('https://dayjs.fenxianglu.cn/category/parse.html#%E5%AE%9E%E4%BE%8B')
 [PM2]('https://pm2.keymetrics.io/docs/usage/quick-start/')
