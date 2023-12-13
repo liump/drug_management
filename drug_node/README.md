@@ -4,6 +4,10 @@
 
 通过 JWT 方式构建，参考 [JWT]('https://blog.csdn.net/small_white_123/article/details/121462359')
 
+## postman setting default token
+
+[postman default token]('https://blog.csdn.net/u011447403/article/details/123655201')
+
 ## PM2
 
 pm2 start app.js

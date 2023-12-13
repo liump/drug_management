@@ -54,15 +54,15 @@ id, drugName, drugCode, total, createTime, remark
 
 1. 人员管理。 CRUD（删除需要管理员）√
 2. 权限管理。 CRUD（删除需要管理员）√
-2. 登录
+2. 登录 √
     2.1 登录 login
     2.2 人员信息 userInfo
-3. Token
+3. Token √
 4. 药品分类 √
     4.1 导入
     4.2 查询
 5. 药品入库。 CRUD √
 6. 药品出库。 CRUD √
-7. 库存预警。 CRUD 
+7. 库存预警。 CRUD √
 8. 可视化大屏 （库存预警、入库信息、出库信息、库存类别、出库Top10） 
 

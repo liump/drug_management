@@ -1,17 +1,18 @@
 /**
- * drug role modules
+ * drug user modules
  */
 const app = require('./app.js')
 const MyDB = require('./MyDB.js')
+const dayjs = require('dayjs')
 
-const TB_NAME = 'tb_role'
+const TB_NAME = 'tb_drug_inventory_alert'
 
 /**
  * select
  */
-app.get('/role', (req, res) => {
+app.get('/inventoryAlert', (req, res) => {
     let params = req.query || {}
-    let { pageNo, pageSize, userName } = params
+    let { pageNo, pageSize, drugName } = params
     let resData = {
         pageNo: pageNo,
         pageSize: pageSize,
@@ -20,7 +21,7 @@ app.get('/role', (req, res) => {
     }
     MyDB(TB_NAME)
         .select()
-        .whereLike('roleName', `%${userName || ''}%`)
+        .whereLike('drugName', `%${drugName || ''}%`)
         .limit(pageSize)
         .offset((pageNo - 1) * pageSize)
         .then(async response => {
@@ -37,7 +38,7 @@ app.get('/role', (req, res) => {
 /**
  * insert
  */
-app.post('/role', (req, res) => {
+app.post('/inventoryAlert', (req, res) => {
     let params = req.body || {}
     let resData = {}
     // add createTime
@@ -56,7 +57,7 @@ app.post('/role', (req, res) => {
 /**
  * update
  */
-app.put('/role', (req, res) => {
+app.put('/inventoryAlert', (req, res) => {
     let params = req.body || {}
     let resData = {}
     let id = params.id
@@ -76,7 +77,7 @@ app.put('/role', (req, res) => {
 /**
  * delete
  */
-app.delete('/role', (req, res) => {
+app.delete('/inventoryAlert', (req, res) => {
     let params = req.body || {}
     let resData = {}
     let id = params.id

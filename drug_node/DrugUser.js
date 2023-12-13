@@ -3,11 +3,8 @@
  */
 const app = require('./app.js')
 const MyDB = require('./MyDB.js')
-const bodyParser = require('body-parser');
-app.use(bodyParser.json({}));  
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+const dayjs = require('dayjs')
+
 const TB_NAME = 'tb_user'
 
 /**
@@ -44,6 +41,8 @@ app.get('/user', (req, res) => {
 app.post('/user', (req, res) => {
     let params = req.body || {}
     let resData = {}
+    // add createTime
+    params.createTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
 
     MyDB(TB_NAME)
         .insert(params)

@@ -7,7 +7,6 @@ MyDB.schema.hasTable('tb_user')  // 查看数据库中是否已经存在 tb_user
 			// 如果 tb_user 表不存在就创建它    
 			return MyDB.schema.createTable('tb_user', function (table) {
 				// 创建 tb_user 表      
-				// 将 id 设置为类型为 bigInt 的主键字段      
 				table.increments();
 				table.string('userName'); // 用户名
 				table.string('userPassword'); // 密码
