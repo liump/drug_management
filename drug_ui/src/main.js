@@ -20,4 +20,10 @@ app.use(createPinia())
 app.use(ElementPlus)
 app.use(router)
 
+
+// 定义全局方法
+// app.config.globalProperties.$ls = () => {
+//   console.log('这是我自定义的全局方法')
+// }
+
 app.mount('#app')

@@ -1,12 +1,16 @@
 <script setup>
 import { RouterView } from 'vue-router'
 import LayoutMenu from './components/LayoutMenu.vue'
+import Logo from '@/assets/images/logo_2.png'
 </script>
 
 <template>
   <div class="common-layout">
     <el-container class="layout-page">
-      <el-header class="layout-header">LOGO</el-header>
+      <el-header class="layout-header">
+        <el-image :src="Logo" class="logo"></el-image>
+        药品库存管理系统
+      </el-header>
       <el-container class="layout-container">
         <el-aside width="200px">
           <LayoutMenu />
@@ -27,6 +31,7 @@ import LayoutMenu from './components/LayoutMenu.vue'
   overflow: hidden;
 }
 
+
 .layout-page {
   flex: 1;
   overflow: hidden;
@@ -40,9 +45,15 @@ import LayoutMenu from './components/LayoutMenu.vue'
   background-color: #324057;
   display: flex;
   align-items: center;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
   color: #fff;
+  padding-left: 10px;
+}
+
+.logo {
+  width: 60px;
+  height: 60px;
 }
 
 .layout-main {
