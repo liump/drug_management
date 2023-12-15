@@ -10,7 +10,7 @@ const service = axios.create({
 const err = (error) => {
     if (error.response) {
         let data = error.response.data
-        
+
         const token = localStorage.getItem('pro__token')
         console.log("------异常响应------", token)
         console.log("------异常响应------", error.response.status)
@@ -27,14 +27,10 @@ const err = (error) => {
                 break
             case 401:
                 ElMessage.warning('很抱歉，登录已过期，请重新登录')
-
-                if (token) {
-                    // store.dispatch('Logout').then(() => {
-                    setTimeout(() => {
-                        window.location.reload()
-                    }, 1500)
-                    // })
-                }
+                localStorage.clear('pro__token')
+                setTimeout(() => {
+                    window.location.reload()
+                }, 1500)
                 break
             default:
                 ElMessage.error(data.message)
@@ -54,7 +50,7 @@ const err = (error) => {
 service.interceptors.request.use(config => {
     const token = localStorage.getItem('pro__token')
     if (token) {
-        config.headers['Authorization'] = token // 让每个请求携带自定义 token 请根据实际情况自行修改
+        config.headers['Authorization'] = 'Bearer ' + token // 让每个请求携带自定义 token 请根据实际情况自行修改
     }
     return config
 }, (error) => {

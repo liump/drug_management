@@ -3,6 +3,7 @@
  */
 const app = require('./app.js')
 const MyDB = require('./MyDB.js')
+const dayjs = require('dayjs')
 
 const TB_NAME = 'tb_role'
 
@@ -21,12 +22,16 @@ app.get('/role', (req, res) => {
     MyDB(TB_NAME)
         .select()
         .whereLike('roleName', `%${userName || ''}%`)
+        .orderBy('createTime', 'desc')
         .limit(pageSize)
         .offset((pageNo - 1) * pageSize)
         .then(async response => {
-            let total = await MyDB(TB_NAME).count('id')
+            let total = await MyDB(TB_NAME).count()
+            for (const key in total[0]) {
+                    total = total[0][key]
+            }
             resData.data = response || []
-            resData.total = total[0][`count('id')`] || 0
+            resData.total = total
             return res.status(200).send({ code: 200, msg: '操作成功！', data: resData })
         })
         .catch(err => {

@@ -6,51 +6,54 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/login',
-      name: 'login',
-      component: () => import('../views/Login/Login.vue')
+      path: '/',
+      redirect: '/login',
     },
     {
-      path: '/',
-      name: 'layout',
+      path: '/login',
+      name: 'Login',
+      component: () => import('@/views/Login/Login.vue')
+    },
+    {
+      path: '/menu',
+      name: 'Layout',
       component: Layout,
-      redirect: '/drugCatelogue',
       children: [
         {
           path: '/drugCatelogue',
-          name: 'drugCatelogue',
+          name: 'DrugCatelogue',
           component: () => import('@/views/DrugCatelogue/DrugCatelogue.vue')
         },
         {
           path: '/drugInput',
-          name: 'drugInput',
+          name: 'DrugInput',
           component: () => import('@/views/DrugInput/DrugInput.vue')
         },
         {
           path: '/drugOutput',
-          name: 'drugOutput',
+          name: 'DrugOutput',
           component: () => import('@/views/DrugOutput/DrugOutput.vue')
         },
         {
           path: '/inventoryAlert',
-          name: 'inventoryAlert',
+          name: 'InventoryAlert',
           component: () => import('@/views/InventoryAlert/InventoryAlert.vue')
         },
         {
           path: '/userManagement',
-          name: 'userManagement',
+          name: 'UserManagement',
           component: () => import('@/views/UserManagement/UserManagement.vue')
         },
         {
           path: '/userRole',
-          name: 'userRole',
+          name: 'UserRole',
           component: () => import('@/views/UserRole/UserRole.vue')
         },
       ]
     },
     {
       path: '/about',
-      name: 'about',
+      name: 'About',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
@@ -58,5 +61,20 @@ const router = createRouter({
     }
   ]
 })
+
+router.beforeEach(async (to, from) => {
+  const token = localStorage.getItem('pro__token')
+  console.log("🚀 ~ file: index.js:67 ~ router.beforeEach ~ token:", token)
+  if (
+    // 检查用户是否已登录
+    !token &&
+    // ❗️ 避免无限重定向
+    to.name !== 'Login'
+  ) {
+    // 将用户重定向到登录页面
+    return { name: 'Login' }
+  }
+})
+
 
 export default router
