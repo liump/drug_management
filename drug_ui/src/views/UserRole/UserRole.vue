@@ -1,6 +1,6 @@
 <script setup>
-import { ref } from 'vue'
-import { ElLoading } from 'element-plus'
+import { ref, reactive } from 'vue'
+import { ElLoading, ElMessage } from 'element-plus'
 import { Edit, View, Delete } from '@element-plus/icons-vue'
 
 import {
@@ -37,6 +37,11 @@ let form = ref({
     roleCode: '', // 权限码
     remark: '' // 备注
 })
+const rules = reactive({
+    roleName: [{ required: true, message: '请输入权限名称' },],
+    roleCode: [{ required: true, message: '请输入权限编码' },]
+})
+const formRef = ref()
 
 function handleListInfo() {
     const params = Object.assign(queryForm.value, queryParams.value)
@@ -54,7 +59,7 @@ handleListInfo()
 
 function handleCurrentChange(params) {
     queryParams.value = Object.assign(queryParams.value, { currentPage: params })
-    handleListInfo()
+    handleSearch()
 }
 
 function handleSearch() {
@@ -100,7 +105,7 @@ function handleDelete(row) {
     httpRoleDelete(row)
         .then(res => {
             loading.close()
-            handleListInfo()
+            handleSearch()
         })
         .catch(err => {
             console.log("🚀 ~ file: UserRole.vue:80 ~ handleDialogConfirm ~ err:", err)
@@ -109,42 +114,47 @@ function handleDelete(row) {
 }
 
 function handleDialogConfirm() {
-    const loading = ElLoading.service({
-        // lock: true,
-        text: '请求中',
-        background: 'rgba(0, 0, 0, 0.7)',
+    formRef.value.validate((valid, fields) => {
+        if (valid) {
+            const loading = ElLoading.service({
+                // lock: true,
+                text: '请求中',
+                background: 'rgba(0, 0, 0, 0.7)',
+            })
+            if (!form.value.id) {
+                // 新增
+                httpRoleInsert(form.value)
+                    .then(res => {
+                        loading.close()
+                        handleDialogCancel()
+                    })
+                    .catch(err => {
+                        console.log("🚀 ~ file: UserRole.vue:80 ~ handleDialogConfirm ~ err:", err)
+                        loading.close()
+                    })
+            } else {
+                // 编辑
+                httpRoleUpdate(form.value)
+                    .then(res => {
+                        loading.close()
+                        handleDialogCancel()
+                    })
+                    .catch(err => {
+                        console.log("🚀 ~ file: UserRole.vue:80 ~ handleDialogConfirm ~ err:", err)
+                        loading.close()
+                    })
+            }
+        } else {
+            ElMessage.warning('请检查必填项。')
+        }
     })
-    if (!form.value.id) {
-        // 新增
-        httpRoleInsert(form.value)
-            .then(res => {
-                console.log("🚀 ~ file: UserRole.vue:76 ~ handleDialogConfirm ~ res:", res)
-                loading.close()
-                handleDialogCancel()
-            })
-            .catch(err => {
-                console.log("🚀 ~ file: UserRole.vue:80 ~ handleDialogConfirm ~ err:", err)
-                loading.close()
-            })
-    } else {
-        // 编辑
-        httpRoleUpdate(form.value)
-            .then(res => {
-                console.log("🚀 ~ file: UserRole.vue:76 ~ handleDialogConfirm ~ res:", res)
-                loading.close()
-                handleDialogCancel()
-            })
-            .catch(err => {
-                console.log("🚀 ~ file: UserRole.vue:80 ~ handleDialogConfirm ~ err:", err)
-                loading.close()
-            })
-    }
+
 
 }
 
 function handleDialogCancel() {
     dialogVisible.value = false
-    handleListInfo()
+    handleSearch()
 }
 </script>
 
@@ -187,11 +197,11 @@ function handleDialogCancel() {
 
         <el-dialog v-model="dialogVisible" :title="dialogTitle" width="660px">
             <el-row type="flex" justify="center">
-                <el-form :model="form" label-width="80" label-suffix=":">
-                    <el-form-item label="权限名称">
+                <el-form ref="formRef" :model="form" :rules="rules" label-width="100" label-suffix=":">
+                    <el-form-item label="权限名称" prop="roleName">
                         <el-input v-model="form.roleName"></el-input>
                     </el-form-item>
-                    <el-form-item label="权限编码">
+                    <el-form-item label="权限编码" prop="roleCode">
                         <el-input v-model="form.roleCode"></el-input>
                     </el-form-item>
                     <el-form-item label="备注">
