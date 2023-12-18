@@ -1,13 +1,13 @@
 import { axios } from './request.js'
 
 const api = {
-    role: '/role'
+    pre: '/role'
 }
 
 // select
 export function httpRoleQuery(parameter) {
     return axios({
-        url: api.role,
+        url: api.pre,
         method: 'get',
         params: parameter
     })
@@ -16,7 +16,7 @@ export function httpRoleQuery(parameter) {
 // insert
 export function httpRoleInsert(parameter) {
     return axios({
-        url: api.role,
+        url: api.pre,
         method: 'post',
         data: parameter
     })
@@ -25,7 +25,7 @@ export function httpRoleInsert(parameter) {
 // update
 export function httpRoleUpdate(parameter) {
     return axios({
-        url: api.role,
+        url: api.pre,
         method: 'put',
         data: parameter
     })
@@ -34,7 +34,7 @@ export function httpRoleUpdate(parameter) {
 // delete
 export function httpRoleDelete(parameter) {
     return axios({
-        url: api.role,
+        url: api.pre,
         method: 'delete',
         data: parameter
     })

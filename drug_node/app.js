@@ -10,6 +10,9 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
+const nocache = require('nocache');
+app.use(nocache());
+
 // 导入校验token的模块, 解析JWT字符串, 还原成 JSON 对象 的模块
 const { expressjwt: jwt } = require('express-jwt');
 const SECRET_KEY = 'login2023' // 与生成token的密钥要一致!

@@ -11,7 +11,7 @@ import {
 } from '@/api/role.js'
 
 let queryForm = ref({
-    search: ''
+    roleName: ''
 })
 let tableHeader = ref([
     { id: 1, label: '权限名称', prop: 'roleName' },
@@ -163,7 +163,7 @@ function handleDialogCancel() {
         <el-row type="flex" justify="space-between">
             <el-form :model="queryForm" label-suffix=":" inline>
                 <el-form-item label="关键字">
-                    <el-input v-model="queryForm.search"></el-input>
+                    <el-input v-model="queryForm.roleName"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="handleSearch">搜索</el-button>
@@ -192,7 +192,7 @@ function handleDialogCancel() {
         <el-row type="flex" justify="end">
             <el-pagination class="page-pagination" v-model:current-page="queryParams.currentPage"
                 v-model:page-size="queryParams.pageSize" layout="total, prev, pager, next, jumper" :total="total"
-                @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                @current-change="handleCurrentChange" />
         </el-row>
 
         <el-dialog v-model="dialogVisible" :title="dialogTitle" width="660px">

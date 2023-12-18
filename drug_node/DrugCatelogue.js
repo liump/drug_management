@@ -121,12 +121,12 @@ function handleInsertData(excelData) {
 
 // list query
 app.get('/drugCatelogue', function (req, res, next) {
-  // get query params, like { pageNo: '1', pageSize: '10', drugName: '片' }
+  // get query params, like { currentPage: '1', pageSize: '10', drugName: '片' }
   let queryParams = req.query || {}
-  let currentParams = queryParams.pageNo - 1
+  let currentParams = queryParams.currentPage - 1
   let sizeParams = queryParams.pageSize
   let resData = {
-    pageNo: currentParams + 1,
+    currentPage: currentParams + 1,
     pageSize: sizeParams,
     data: [],
     total: 0

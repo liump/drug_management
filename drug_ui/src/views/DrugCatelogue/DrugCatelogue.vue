@@ -1,8 +1,9 @@
 <script setup>
 import { ref } from 'vue'
+import { httpDrugQuery } from '@/api/drugCatelogue.js'
 
-let formData = ref({
-    search: ''
+let queryForm = ref({
+    drugName: ''
 })
 let tableHeader = ref([
     { id: 1, label: '批准文号', prop: 'approvalNumber' },
@@ -23,36 +24,72 @@ let queryParams = ref({
     currentPage: 1,
     pageSize: 10
 })
+let tableLoading = ref(false)
 
 
-function handleSizeChange(params) {
-
+function handleListInfo() {
+    const params = Object.assign(queryForm.value, queryParams.value)
+    tableLoading.value = true
+    httpDrugQuery(params)
+        .then(res => {
+            tableData.value = res.data.data || []
+            total.value = res.data.total || 0
+            tableLoading.value = false
+        })
+        .catch(err => {
+            tableLoading.value = false
+            console.log("🚀 ~ file: UserRole.vue:41 ~ handleListInfo ~ err:", err)
+        })
 }
-function handleCurrentChange(params) {
 
+handleListInfo()
+
+function handleCurrentChange(params) {
+    queryParams.value = Object.assign(queryParams.value, { currentPage: params })
+    handleSearch()
+}
+
+function handleSearch() {
+    handleListInfo()
+}
+function handleReset() {
+    queryForm.value = {
+        search: ''
+    }
+    queryParams.value = {
+        currentPage: 1,
+        pageSize: 10
+    }
+    total.value = 0
+    handleSearch()
 }
 </script>
 
 <template>
     <div class="page">
         <el-row justify="space-between">
-            <el-form :model="formData" label-suffix=":">
-                <el-form-item label="关键字">
-                    <el-input v-model="formData.search"></el-input>
+            <el-form :model="queryForm" label-suffix=":" inline>
+                <el-form-item label="产品名称">
+                    <el-input v-model="queryForm.drugName" placehold="请输入产品名称关键字"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="handleSearch">搜索</el-button>
+                    <el-button @click="handleReset">重置</el-button>
                 </el-form-item>
             </el-form>
             <el-upload :show-file-list="false" action="/api/drugCatelogue/upload">
                 <el-button type="primary">上传药品本位码</el-button>
             </el-upload>
         </el-row>
-        <el-table :data="tableData" class="page-table">
+        <el-table :data="tableData" class="page-table" v-loading="tableLoading">
+            <el-table-column type="index" label="序号" width="55"></el-table-column>
             <el-table-column v-for="(item, index) in tableHeader" :key="index" :prop="item.prop" :label="item.label" />
         </el-table>
 
         <el-row type="flex" justify="end">
             <el-pagination class="page-pagination" v-model:current-page="queryParams.currentPage"
-                v-model:page-size="queryParams.pageSize" layout="total, prev, pager, next, jumper" :total="total"
-                @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                layout="total, prev, pager, next, jumper" :total="total" @size-change="handleSizeChange"
+                @current-change="handleCurrentChange" />
         </el-row>
 
     </div>

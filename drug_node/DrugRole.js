@@ -12,9 +12,9 @@ const TB_NAME = 'tb_role'
  */
 app.get('/role', (req, res) => {
     let params = req.query || {}
-    let { pageNo, pageSize, userName } = params
+    let { currentPage, pageSize, userName } = params
     let resData = {
-        pageNo: pageNo,
+        currentPage: currentPage,
         pageSize: pageSize,
         data: [],
         total: 0
@@ -24,7 +24,7 @@ app.get('/role', (req, res) => {
         .whereLike('roleName', `%${userName || ''}%`)
         .orderBy('createTime', 'desc')
         .limit(pageSize)
-        .offset((pageNo - 1) * pageSize)
+        .offset((currentPage - 1) * pageSize)
         .then(async response => {
             let total = await MyDB(TB_NAME).count()
             for (const key in total[0]) {
