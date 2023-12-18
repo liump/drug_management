@@ -1,8 +1,20 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
+import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
+import { Edit, View, Delete } from '@element-plus/icons-vue'
 
-let formData = ref({
-    search: ''
+import {
+    httpDrugAlertQuery,
+    httpDrugAlertInsert,
+    httpDrugAlertUpdate,
+    httpDrugAlertDelete
+} from '@/api/drugAlert.js'
+
+import { httpDrugCatelogueQuery } from '@/api/drugCatelogue.js'
+
+
+let queryForm = ref({
+    drugName: ''
 })
 let tableHeader = ref([
     { id: 1, label: '产品名称', prop: 'drugName' },
@@ -10,6 +22,7 @@ let tableHeader = ref([
     { id: 3, label: '预警数量', prop: 'total' },
     { id: 4, label: '创建时间', prop: 'createTime' },
     { id: 5, label: '备注', prop: 'remark' },
+    { id: 6, label: '操作', prop: 'control' },
 ])
 
 let tableData = ref([
@@ -22,32 +35,257 @@ let queryParams = ref({
 })
 
 
-function handleSizeChange(params) {
+let dialogVisible = ref(false)
+let dialogTitle = ref('')
+let form = ref({
+    drugName: '', // 产品名称
+    drugCode: '', // 产品编码
+    total: '', // 预警数量
+    remark: '' // 备注
+})
+const rules = reactive({
+    drugName: [{ required: true, message: '请输入产品名称' },],
+    total: [{ required: true, message: '请输入预警数量' },],
+    location: [{ required: true, message: '请输入货架位置' },],
+})
+const formRef = ref()
 
+function handleListInfo() {
+    const params = Object.assign(queryForm.value, queryParams.value)
+    httpDrugAlertQuery(params)
+        .then(res => {
+            tableData.value = res.data.data || []
+            total.value = res.data.total || 0
+        })
+        .catch(err => {
+            console.log("🚀 ~ file: UserRole.vue:41 ~ handleListInfo ~ err:", err)
+        })
 }
+
+handleListInfo()
+
 function handleCurrentChange(params) {
+    queryParams.value = Object.assign(queryParams.value, { currentPage: params })
+    handleSearch()
+}
+
+function handleSearch() {
+    handleListInfo()
+}
+function handleReset() {
+    queryForm.value = {
+        search: ''
+    }
+    queryParams.value = {
+        currentPage: 1,
+        pageSize: 10
+    }
+    total.value = 0
+    handleSearch()
+}
+
+function handleAdd(row) {
+    row = row || {
+        drugName: '', // 产品名称
+        drugCode: '', // 产品编码
+        total: '', // 预警数量
+        location: '' // 货架位置
+    }
+    // httpDrugQuery
+    handleDrugInfo()
+    dialogTitle.value = '新增预警'
+
+    form.value = Object.assign({
+        drugName: '', // 产品名称
+        drugCode: '', // 产品编码
+        total: '', // 预警数量
+        location: '' // 货架位置
+    }, row)
+    dialogVisible.value = true
 
 }
+function handleEdit(row) {
+    dialogTitle.value = '编辑预警'
+    handleAdd(row)
+}
+
+function handleDelete(row) {
+    ElMessageBox.confirm(
+        `确认删除 ${row.drugName} 数据吗?`,
+        '警告',
+        {
+            confirmButtonText: '确认删除',
+            cancelButtonText: '取消删除',
+            type: 'warning',
+        }
+    )
+        .then(() => {
+            // success
+            const loading = ElLoading.service({
+                // lock: true,
+                text: '请求中',
+                background: 'rgba(0, 0, 0, 0.7)',
+            })
+            httpDrugAlertDelete(row)
+                .then(res => {
+                    loading.close()
+                    handleSearch()
+                })
+                .catch(err => {
+                    loading.close()
+                })
+        })
+        .catch(() => {
+            // Delete canceled
+        })
+
+}
+
+function handleDialogConfirm() {
+    formRef.value.validate((valid, fields) => {
+        if (valid) {
+            const loading = ElLoading.service({
+                // lock: true,
+                text: '请求中',
+                background: 'rgba(0, 0, 0, 0.7)',
+            })
+            delete form.value._vts
+            delete form.value.isTrusted
+            let params = {
+                drugName: form.value.drugName,
+                drugCode: form.value.drugCode,
+                total: form.value.total,
+                remark: form.value.remark
+            }
+            if (form.value.id) {
+                params.id = form.value.id
+            }
+
+            if (!form.value.id) {
+                // 新增
+                httpDrugAlertInsert(params)
+                    .then(res => {
+                        loading.close()
+                        handleDialogCancel()
+                    })
+                    .catch(err => {
+                        console.log("🚀 ~ file: UserRole.vue:80 ~ handleDialogConfirm ~ err:", err)
+                        loading.close()
+                    })
+            } else {
+                // 编辑
+                httpDrugAlertUpdate(params)
+                    .then(res => {
+                        loading.close()
+                        handleDialogCancel()
+                    })
+                    .catch(err => {
+                        console.log("🚀 ~ file: UserRole.vue:80 ~ handleDialogConfirm ~ err:", err)
+                        loading.close()
+                    })
+            }
+        } else {
+            ElMessage.warning('请检查必填项。')
+        }
+    })
+
+
+}
+
+function handleDialogCancel() {
+    dialogVisible.value = false
+    handleSearch()
+}
+
+let loading = ref(false)
+let drugOptions = ref([])
+function handleDrugInfo(drugName) {
+    httpDrugCatelogueQuery({ drugName: drugName })
+        .then(res => {
+            let data = res.data || []
+            data = data.data || []
+            drugOptions.value = data
+        })
+        .catch(err => {
+            console.log("🚀 ~ file: DrugAlert.vue:195 ~ handleDrugInfo ~ err:", err)
+        })
+}
+function handleDrugChange(drugCode) {
+    let _obj = drugOptions.value.find(el => `${el.id}` === `${drugCode}`)
+    _obj = { ..._obj } || {}
+
+    delete _obj.id
+    form.value = Object.assign(form.value, _obj)
+}
+
 </script>
 
 <template>
     <div class="page">
-        <el-row>
-            <el-form :model="formData" label-suffix=":">
-                <el-form-item label="关键字">
-                    <el-input v-model="formData.search"></el-input>
+        <el-row type="flex" justify="space-between">
+            <el-form :model="queryForm" label-suffix=":" inline>
+                <el-form-item label="产品名称">
+                    <el-input v-model="queryForm.drugName" placehold="请输入产品关键字"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="handleSearch">搜索</el-button>
+                    <el-button @click="handleReset">重置</el-button>
                 </el-form-item>
             </el-form>
+            <el-button type="primary" @click="handleAdd">新增</el-button>
         </el-row>
         <el-table :data="tableData" class="page-table">
-            <el-table-column v-for="(item, index) in tableHeader" :key="index" :prop="item.prop" :label="item.label" />
+            <el-table-column type="index" label="序号" width="55"></el-table-column>
+            <el-table-column v-for="(item, index) in tableHeader" :key="index" :prop="item.prop" :label="item.label">
+                <template v-slot="{ row }">
+                    <div v-if="item.prop !== 'control'">
+                        {{ row[item.prop] }}
+                    </div>
+                    <el-row v-else>
+                        <el-link class="mr-1" :icon="Edit" @click="handleEdit(row)">编辑</el-link>
+                        <el-link :icon="Delete" type="danger" @click="handleDelete(row)">删除</el-link>
+                    </el-row>
+                </template>
+            </el-table-column>
         </el-table>
 
         <el-row type="flex" justify="end">
             <el-pagination class="page-pagination" v-model:current-page="queryParams.currentPage"
-                v-model:page-size="queryParams.pageSize" layout="total, prev, pager, next, jumper" :total="total"
-                @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                layout="total, prev, pager, next, jumper" :total="total" @current-change="handleCurrentChange" />
         </el-row>
+
+        <el-dialog v-model="dialogVisible" :title="dialogTitle" width="660px">
+            <el-row type="flex" justify="center">
+                <el-form ref="formRef" :model="form" :rules="rules" label-width="100" label-suffix=":">
+                    <el-form-item label="产品名称" prop="drugName">
+                        <el-select v-model="form.drugName" clearable placeholder="请输入产品名称关键字" :loading="loading" filterable
+                            remote reserve-keyword remote-show-suffix :remote-method="handleDrugInfo"
+                            @change="handleDrugChange">
+                            <el-option v-for="item in drugOptions" :key="item.id" :label="item.drugName" :value="item.id">
+                                <span style="float: left">{{ item.drugName }}</span>
+                                <span style="float: right;color: var(--el-text-color-secondary);font-size: 13px;">
+                                    {{ item.specifications }}
+                                </span>
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="预警数量" prop="total">
+                        <el-input v-model="form.total"></el-input>
+                    </el-form-item>
+                    <el-form-item label="备注">
+                        <el-input v-model="form.remark"></el-input>
+                    </el-form-item>
+                </el-form>
+            </el-row>
+            <template #footer>
+                <span class="dialog-footer">
+                    <el-button @click="handleDialogCancel">取消</el-button>
+                    <el-button type="primary" @click="handleDialogConfirm">
+                        确定
+                    </el-button>
+                </span>
+            </template>
+        </el-dialog>
 
     </div>
 </template>
@@ -72,5 +310,9 @@ function handleCurrentChange(params) {
 
 .page-pagination {
     margin-top: 16px;
+}
+
+.mr-1 {
+    margin-right: 16px;
 }
 </style>
