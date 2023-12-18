@@ -5,7 +5,7 @@ const api = {
 }
 
 // select
-export function httpDrugQuery(parameter) {
+export function httpDrugCatelogueQuery(parameter) {
     return axios({
         url: api.pre,
         method: 'get',

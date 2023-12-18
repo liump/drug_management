@@ -3,6 +3,7 @@
  */
 const app = require('./app.js')
 const MyDB = require('./MyDB.js')
+const dayjs = require('dayjs')
 
 const TB_NAME = 'tb_drug_input'
 
@@ -11,9 +12,9 @@ const TB_NAME = 'tb_drug_input'
  */
 app.get('/drugInput', (req, res) => {
     let params = req.query || {}
-    let { pageNo, pageSize, drugName } = params
+    let { currentPage, pageSize, drugName } = params
     let resData = {
-        pageNo: pageNo,
+        currentPage: currentPage,
         pageSize: pageSize,
         data: [],
         total: 0
@@ -21,12 +22,17 @@ app.get('/drugInput', (req, res) => {
     MyDB(TB_NAME)
         .select()
         .whereLike('drugName', `%${drugName || ''}%`)
+        .orderBy('createTime', 'desc')
         .limit(pageSize)
-        .offset((pageNo - 1) * pageSize)
+        .offset((currentPage - 1) * pageSize)
         .then(async response => {
             let total = await MyDB(TB_NAME).count('id')
             resData.data = response || []
-            resData.total = total[0][`count('id')`] || 0
+            let _total = 0
+            for (const key in total[0]) {
+                _total = total[0][key]
+            }
+            resData.total = _total || 0
             return res.status(200).send({ code: 200, msg: '操作成功！', data: resData })
         })
         .catch(err => {

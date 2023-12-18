@@ -97,20 +97,36 @@ function handleEdit(row) {
 }
 
 function handleDelete(row) {
-    const loading = ElLoading.service({
-        // lock: true,
-        text: '请求中',
-        background: 'rgba(0, 0, 0, 0.7)',
-    })
-    httpRoleDelete(row)
-        .then(res => {
-            loading.close()
-            handleSearch()
+    ElMessageBox.confirm(
+        `确认删除 ${row.roleName} 数据吗?`,
+        '警告',
+        {
+            confirmButtonText: '确认删除',
+            cancelButtonText: '取消删除',
+            type: 'warning',
+        }
+    )
+        .then(() => {
+            // success
+            const loading = ElLoading.service({
+                // lock: true,
+                text: '请求中',
+                background: 'rgba(0, 0, 0, 0.7)',
+            })
+            httpRoleDelete(row)
+                .then(res => {
+                    loading.close()
+                    handleSearch()
+                })
+                .catch(err => {
+                    console.log("🚀 ~ file: UserRole.vue:80 ~ handleDialogConfirm ~ err:", err)
+                    loading.close()
+                })
         })
-        .catch(err => {
-            console.log("🚀 ~ file: UserRole.vue:80 ~ handleDialogConfirm ~ err:", err)
-            loading.close()
+        .catch(() => {
+            // Delete canceled
         })
+
 }
 
 function handleDialogConfirm() {
@@ -180,8 +196,6 @@ function handleDialogCancel() {
                         {{ row[item.prop] }}
                     </div>
                     <el-row v-else>
-                        <!-- <el-button text @click="handleEdit(row)">编辑</el-button> -->
-                        <!-- <el-button text type="danger" @click="handleDelete(row)">删除</el-button> -->
                         <el-link class="mr-1" :icon="Edit" @click="handleEdit(row)">编辑</el-link>
                         <el-link :icon="Delete" type="danger" @click="handleDelete(row)">删除</el-link>
                     </el-row>
@@ -191,8 +205,7 @@ function handleDialogCancel() {
 
         <el-row type="flex" justify="end">
             <el-pagination class="page-pagination" v-model:current-page="queryParams.currentPage"
-                v-model:page-size="queryParams.pageSize" layout="total, prev, pager, next, jumper" :total="total"
-                @current-change="handleCurrentChange" />
+                layout="total, prev, pager, next, jumper" :total="total" @current-change="handleCurrentChange" />
         </el-row>
 
         <el-dialog v-model="dialogVisible" :title="dialogTitle" width="660px">

@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { httpDrugQuery } from '@/api/drugCatelogue.js'
+import { httpDrugCatelogueQuery } from '@/api/drugCatelogue.js'
 
 let queryForm = ref({
     drugName: ''
@@ -30,7 +30,7 @@ let tableLoading = ref(false)
 function handleListInfo() {
     const params = Object.assign(queryForm.value, queryParams.value)
     tableLoading.value = true
-    httpDrugQuery(params)
+    httpDrugCatelogueQuery(params)
         .then(res => {
             tableData.value = res.data.data || []
             total.value = res.data.total || 0
