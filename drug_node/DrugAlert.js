@@ -27,7 +27,10 @@ app.get('/inventoryAlert', (req, res) => {
         .then(async response => {
             let total = await MyDB(TB_NAME).count('id')
             resData.data = response || []
-            resData.total = total[0][`count('id')`] || 0
+            for (const key in total[0]) {
+                total = total[0][key]
+            }
+            resData.total = total || 0
             return res.status(200).send({ code: 200, msg: '操作成功！', data: resData })
         })
         .catch(err => {
