@@ -77,6 +77,9 @@ router.beforeEach(async (to, from) => {
   ) {
     // 将用户重定向到登录页面
     return { name: 'Login' }
+  } 
+  if(token && to.name === 'Login') {
+    return { name: 'DrugCatelogue' }
   }
 })
 
