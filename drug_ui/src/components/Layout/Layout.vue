@@ -1,15 +1,31 @@
 <script setup>
-import { RouterView } from 'vue-router'
+import { RouterView, useRouter } from 'vue-router'
 import LayoutMenu from './components/LayoutMenu.vue'
 import Logo from '@/assets/images/logo_2.png'
+
+const $router = useRouter()
+
+function handleToBigScreen() {
+  // TODO: 跳转到大屏页面
+  $router.push({
+    name: 'BigScreen'
+  })
+}
 </script>
 
 <template>
   <div class="common-layout">
     <el-container class="layout-page">
       <el-header class="layout-header">
-        <el-image :src="Logo" class="logo"></el-image>
-        药品库存管理系统
+        <el-row type="flex" align="middle">
+          <el-image :src="Logo" class="logo"></el-image>
+          药品库存管理系统
+        </el-row>
+        <el-row>
+          <el-icon @click.naive="handleToBigScreen" class="cur-p">
+            <DataAnalysis />
+          </el-icon>
+        </el-row>
       </el-header>
       <el-container class="layout-container">
         <el-aside width="200px">
@@ -45,6 +61,7 @@ import Logo from '@/assets/images/logo_2.png'
   background-color: #324057;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   font-size: 22px;
   font-weight: 700;
   color: #fff;
@@ -59,5 +76,8 @@ import Logo from '@/assets/images/logo_2.png'
 .layout-main {
   padding: 16px;
   background-color: #e5e9f2;
+}
+.cur-p{
+  cursor: pointer;
 }
 </style>

@@ -15,6 +15,11 @@ const router = createRouter({
       component: () => import('@/views/Login/Login.vue')
     },
     {
+      path: '/bigScreen',
+      name: 'BigScreen',
+      component: () => import('@/views/BigScreen/BigScreen.vue')
+    },
+    {
       path: '/menu',
       name: 'Layout',
       component: Layout,
@@ -64,7 +69,6 @@ const router = createRouter({
 
 router.beforeEach(async (to, from) => {
   const token = localStorage.getItem('pro__token')
-  console.log("🚀 ~ file: index.js:67 ~ router.beforeEach ~ token:", token)
   if (
     // 检查用户是否已登录
     !token &&

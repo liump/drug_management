@@ -18,13 +18,11 @@ function handleLogin() {
         .then(res => {
             // 保存 token
             const token = res.data.token || ''
-            console.log("🚀 ~ file: Login.vue:22 ~ handleLogin ~ token:", token)
             localStorage.setItem('pro__token', token)
 
 
             // 保存 userInfo
             const userInfo = res.data.userInfo || {}
-            console.log("🚀 ~ file: Login.vue:26 ~ handleLogin ~ userInfo:", userInfo)
             localStorage.setItem('pro__userInfo', JSON.stringify(userInfo))
 
             router.push({
@@ -50,10 +48,10 @@ function handleLogin() {
             <h2>药品库存管理系统</h2>
             <el-form :model="form" label-suffix=":" label-width="70" class="form-row">
                 <el-form-item label="用户名">
-                    <el-input v-model="form.userName"></el-input>
+                    <el-input v-model="form.userName" @keyup.enter="handleLogin"></el-input>
                 </el-form-item>
                 <el-form-item label="密码">
-                    <el-input v-model="form.userPassword"></el-input>
+                    <el-input v-model="form.userPassword" @keyup.enter="handleLogin"></el-input>
                 </el-form-item>
                 <el-row type="flex" justify="center">
                     <el-button type="primary" @click="handleLogin">登 录</el-button>

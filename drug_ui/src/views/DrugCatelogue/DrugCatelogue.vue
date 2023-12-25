@@ -38,7 +38,6 @@ function handleListInfo() {
         })
         .catch(err => {
             tableLoading.value = false
-            console.log("🚀 ~ file: UserRole.vue:41 ~ handleListInfo ~ err:", err)
         })
 }
 

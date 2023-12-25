@@ -22,6 +22,7 @@ let tableHeader = ref([
     { id: 4, label: '创建时间', prop: 'createTime' },
     { id: 5, label: '最后登录时间', prop: 'lastLoginTime' },
     { id: 6, label: '备注', prop: 'remark' },
+    { id: 100, label: '操作', prop: 'control' },
 ])
 
 let tableData = ref([
@@ -148,7 +149,6 @@ function handleDialogConfirm() {
                         handleDialogCancel()
                     })
                     .catch(err => {
-                        console.log("🚀 ~ file: UserRole.vue:80 ~ handleDialogConfirm ~ err:", err)
                         loading.close()
                     })
             } else {
@@ -159,7 +159,6 @@ function handleDialogConfirm() {
                         handleDialogCancel()
                     })
                     .catch(err => {
-                        console.log("🚀 ~ file: UserRole.vue:80 ~ handleDialogConfirm ~ err:", err)
                         loading.close()
                     })
             }

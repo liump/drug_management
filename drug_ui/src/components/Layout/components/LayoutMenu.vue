@@ -14,15 +14,11 @@ let menuList = ref([
 const _useRoute = useRoute()
 let defaultActive = ref(_useRoute.path)
 
-function handleToPage(pageName) {
-  console.log("🚀 ~ file: LayoutMenu.vue:14 ~ handleToPage ~ pageName:", pageName)
-}
 </script>
 
 <template>
   <el-menu :default-active="defaultActive" class="layout-menu" router>
-    <el-menu-item v-for="item of menuList" :key="item.id" :index="`${item.pageName}`"
-      @click="handleToPage(item.pageName)">
+    <el-menu-item v-for="item of menuList" :key="item.id" :index="`${item.pageName}`">
       <el-icon>
         <Document />
       </el-icon>

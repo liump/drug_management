@@ -169,7 +169,6 @@ function handleDialogConfirm() {
                         handleDialogCancel()
                     })
                     .catch(err => {
-                        console.log("🚀 ~ file: UserRole.vue:80 ~ handleDialogConfirm ~ err:", err)
                         loading.close()
                     })
             } else {
@@ -180,7 +179,6 @@ function handleDialogConfirm() {
                         handleDialogCancel()
                     })
                     .catch(err => {
-                        console.log("🚀 ~ file: UserRole.vue:80 ~ handleDialogConfirm ~ err:", err)
                         loading.close()
                     })
             }

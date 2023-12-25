@@ -13,11 +13,11 @@ app.get('/bigScreen/alert', (req, res) => {
     MyDB.raw(`
         select 
             *,
-            (select total from tb_drug_input where drugCode = tb_alert.drugCode)
+            (select sum(total) total from tb_drug_input where drugCode = tb_alert.drugCode)
                 -
-            (select total from tb_drug_output where drugCode = tb_alert.drugCode)   
+            (select sum(total) total from tb_drug_output where drugCode = tb_alert.drugCode)   
                 as resultTotal
-        from tb_drug_inventory_alert tb_alert;
+        from tb_drug_inventory_alert tb_alert limit 0,6;
         `)
         .then(response => {
             resData = response[0] || []
@@ -37,9 +37,10 @@ app.get('/bigScreen/input', (req, res) => {
     let resData = {}
 
     MyDB('tb_drug_input')
+        // .select(["approvalNumber", " dosage", " drugCode", " drugName", " holder", " productionUnit", " specifications", " total"])
         .select()
         .orderBy('createTime', 'desc')
-        .limit(10)
+        .limit(5)
         .then(response => {
             resData = response
             return res.status(200).send({ code: 200, msg: '操作成功！', data: resData })
@@ -58,7 +59,7 @@ app.get('/bigScreen/output', (req, res) => {
     MyDB('tb_drug_output')
         .select()
         .orderBy('createTime', 'desc')
-        .limit(10)
+        .limit(5)
         .then(response => {
             resData = response
             return res.status(200).send({ code: 200, msg: '操作成功！', data: resData })
@@ -76,7 +77,7 @@ app.get('/bigScreen/catelogue', (req, res) => {
 
     MyDB('tb_drug_catelogue')
         .select('dosage')
-        .count('*')
+        .count('*', {as: 'count'})
         .groupBy('dosage')
         .then(response => {
             resData = response

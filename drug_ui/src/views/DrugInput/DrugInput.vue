@@ -64,7 +64,6 @@ function handleListInfo() {
             total.value = res.data.total || 0
         })
         .catch(err => {
-            console.log("🚀 ~ file: UserRole.vue:41 ~ handleListInfo ~ err:", err)
         })
 }
 
@@ -165,7 +164,6 @@ function handleDialogConfirm() {
                         handleDialogCancel()
                     })
                     .catch(err => {
-                        console.log("🚀 ~ file: UserRole.vue:80 ~ handleDialogConfirm ~ err:", err)
                         loading.close()
                     })
             } else {
@@ -176,7 +174,6 @@ function handleDialogConfirm() {
                         handleDialogCancel()
                     })
                     .catch(err => {
-                        console.log("🚀 ~ file: UserRole.vue:80 ~ handleDialogConfirm ~ err:", err)
                         loading.close()
                     })
             }

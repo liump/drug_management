@@ -66,3 +66,9 @@ id, drugName, drugCode, total, createTime, remark
 7. 库存预警。 CRUD √
 8. 可视化大屏 （库存预警、入库信息、出库信息、库存类别、出库Top10） 
 
+## 大屏设计
+[柱状图-入库信息 demo1.js](https://www.isqqw.com/viewer?id=42996)
+[柱状图-出库信息 demo2.js](https://www.isqqw.com/viewer?id=42770)
+[柱状图-出库Top10 demo3.js](https://www.isqqw.com/viewer?id=42728)
+[饼图-库存类别 demo4.js](https://www.isqqw.com/viewer?id=42129)
+[柱状图-库存预警 demo5.js](https://www.isqqw.com/viewer?id=42368)

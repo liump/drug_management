@@ -24,7 +24,16 @@ app.use(
     secret: SECRET_KEY,
     algorithms: ['HS256'], // 使用何种加密算法解析
   })
-    .unless({ path: ['/login'] }) // 登录页无需校验
+    .unless({
+      path: [
+        '/login', // 登录页无需校验
+        '/bigScreen/outputTop10',
+        '/bigScreen/input',
+        '/bigScreen/catelogue',
+        '/bigScreen/output',
+        '/bigScreen/alert',
+      ]
+    })
 )
 
 // jwt 相关错误处理
