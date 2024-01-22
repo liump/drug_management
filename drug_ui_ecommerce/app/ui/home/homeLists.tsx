@@ -1,5 +1,5 @@
 'use client'
-import { useState, Fragment } from 'react'
+import { useState, Fragment, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { axios } from '@/app/utils/request'
 
@@ -27,38 +27,37 @@ function HomeLists() {
         }
     ])
 
-    // function handleListInfo() {
-    //     const params = {
-    //         pageNo: 1,
-    //         pageSize: 10,
-    //         drugName: ''
-    //     }
-    //     axios({
-    //         url: '/eCommerce/list',
-    //         method: 'get',
-    //         params: params
-    //     })
-    //         .then((res: any) => {
-    //             res = res.data || {}
-    //             console.log("🚀 ~ useEffect ~ res:", res)
-    //             let list = res.map((el: any, index: number) => {
-    //                 const obj = {
-    //                     id: index,
-    //                     name: el.drugName,
-    //                     href: '#',
-    //                     imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-    //                     imageAlt: el.drugName,
-    //                     price: '¥35',
-    //                     color: el.dosage,
-    //                 }
-    //                 return obj
-    //             })
-    //             setDataSource(list)
+    function handleListInfo() {
+        const params = {
+            pageNo: 1,
+            pageSize: 10,
+            drugName: ''
+        }
+        axios({
+            url: '/eCommerce/list',
+            method: 'get',
+            params: params
+        })
+            .then((res: any) => {
+                res = res.data || {}
+                console.log("🚀 ~ useEffect ~ res:", res)
+                let list = res.map((el: any, index: number) => {
+                    const obj = {
+                        id: index,
+                        name: el.drugName,
+                        href: '#',
+                        imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
+                        imageAlt: el.drugName,
+                        price: '¥35',
+                        color: el.dosage,
+                    }
+                    return obj
+                })
+                setDataSource(list)
 
-    //         })
-    // }
+            })
+    }
 
-    // // handleListInfo()
 
 
     function closeModal() {
@@ -70,6 +69,10 @@ function HomeLists() {
         setDialogObj(product)
         setIsOpen(true)
     }
+
+    // useEffect(() => {
+    //     handleListInfo()
+    // }, [])
 
     return (
         <div className="bg-white">

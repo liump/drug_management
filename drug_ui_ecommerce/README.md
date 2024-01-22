@@ -39,3 +39,13 @@ id, userId, drugCode
 ## 药品明细
 1. 查询库存药品明细列表
 
+## learn
+[react](https://react.dev/)
+[React Router](https://reactrouter.com/en/main)
+[e commerce template](https://www.bootstrapmb.com/item/14246/preview)
+[tailwind css](https://www.tailwindcss.cn/docs/installation)
+[classnames]()
+[axios](https://axios-http.com/)
+[json-server]()
+[@reduxjs/toolkit]()
+[react-redux]()
