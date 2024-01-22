@@ -8,7 +8,7 @@
     "start_1": "next start",
     "lint": "next lint",
     "debug": "node server.js --hostname 127.0.0.1",
-    "start": "node server.js NODE_ENV=production "
+    "start": "node server.js NODE_ENV=production --post 4000"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.17",
