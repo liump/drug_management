@@ -57,22 +57,26 @@ module.exports = app;
 
 // 初始化模型，如果表不存在就建表
 require('./modeling.js')
+// 上传模块API
+require('./api_upload.js')
 // 药品分类模块API
-require('./DrugCatelogue.js')
+require('./api_modules/DrugCatelogue.js')
 // 入库
-require('./DrugInput.js')
+require('./api_modules/DrugInput.js')
 // 出库
-require('./DrugOutput.js')
+require('./api_modules/DrugOutput.js')
 // 用户表
-require('./DrugUser.js')
+require('./api_modules/DrugUser.js')
 // 权限表
-require('./DrugRole.js')
+require('./api_modules/DrugRole.js')
 // 库存预警
-require('./DrugAlert.js')
+require('./api_modules/DrugAlert.js')
 // 登录
 require('./Login.js')
 // 大屏
-require('./DrugBigScreen.js')
+require('./api_modules/DrugBigScreen.js')
+// 电商
+require('./api_modules/DrugECommerce.js')
 
 
 app.get('/', (req, res) => {

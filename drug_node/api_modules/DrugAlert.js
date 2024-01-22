@@ -1,37 +1,36 @@
 /**
- * drug role modules
+ * drug user modules
  */
-const app = require('./app.js')
-const MyDB = require('./MyDB.js')
+const app = require('../app.js')
+const MyDB = require('../MyDB.js')
 const dayjs = require('dayjs')
 
-const TB_NAME = 'tb_role'
+const TB_NAME = 'tb_drug_inventory_alert'
 
 /**
  * select
  */
-app.get('/role', (req, res) => {
+app.get('/inventoryAlert', (req, res) => {
     let params = req.query || {}
-    let { currentPage, pageSize, userName } = params
+    let { pageNo, pageSize, drugName } = params
     let resData = {
-        currentPage: currentPage,
+        pageNo: pageNo,
         pageSize: pageSize,
         data: [],
         total: 0
     }
     MyDB(TB_NAME)
         .select()
-        .whereLike('roleName', `%${userName || ''}%`)
-        .orderBy('createTime', 'desc')
+        .whereLike('drugName', `%${drugName || ''}%`)
         .limit(pageSize)
-        .offset((currentPage - 1) * pageSize)
+        .offset((pageNo - 1) * pageSize)
         .then(async response => {
-            let total = await MyDB(TB_NAME).count()
-            for (const key in total[0]) {
-                    total = total[0][key]
-            }
+            let total = await MyDB(TB_NAME).count('id')
             resData.data = response || []
-            resData.total = total
+            for (const key in total[0]) {
+                total = total[0][key]
+            }
+            resData.total = total || 0
             return res.status(200).send({ code: 200, msg: '操作成功！', data: resData })
         })
         .catch(err => {
@@ -42,7 +41,7 @@ app.get('/role', (req, res) => {
 /**
  * insert
  */
-app.post('/role', (req, res) => {
+app.post('/inventoryAlert', (req, res) => {
     let params = req.body || {}
     let resData = {}
     // add createTime
@@ -61,7 +60,7 @@ app.post('/role', (req, res) => {
 /**
  * update
  */
-app.put('/role', (req, res) => {
+app.put('/inventoryAlert', (req, res) => {
     let params = req.body || {}
     let resData = {}
     let id = params.id
@@ -81,7 +80,7 @@ app.put('/role', (req, res) => {
 /**
  * delete
  */
-app.delete('/role', (req, res) => {
+app.delete('/inventoryAlert', (req, res) => {
     let params = req.body || {}
     let resData = {}
     let id = params.id

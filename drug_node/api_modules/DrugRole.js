@@ -1,36 +1,37 @@
 /**
- * drug user modules
+ * drug role modules
  */
-const app = require('./app.js')
-const MyDB = require('./MyDB.js')
+const app = require('../app.js')
+const MyDB = require('../MyDB.js')
 const dayjs = require('dayjs')
 
-const TB_NAME = 'tb_drug_inventory_alert'
+const TB_NAME = 'tb_role'
 
 /**
  * select
  */
-app.get('/inventoryAlert', (req, res) => {
+app.get('/role', (req, res) => {
     let params = req.query || {}
-    let { pageNo, pageSize, drugName } = params
+    let { currentPage, pageSize, userName } = params
     let resData = {
-        pageNo: pageNo,
+        currentPage: currentPage,
         pageSize: pageSize,
         data: [],
         total: 0
     }
     MyDB(TB_NAME)
         .select()
-        .whereLike('drugName', `%${drugName || ''}%`)
+        .whereLike('roleName', `%${userName || ''}%`)
+        .orderBy('createTime', 'desc')
         .limit(pageSize)
-        .offset((pageNo - 1) * pageSize)
+        .offset((currentPage - 1) * pageSize)
         .then(async response => {
-            let total = await MyDB(TB_NAME).count('id')
-            resData.data = response || []
+            let total = await MyDB(TB_NAME).count()
             for (const key in total[0]) {
-                total = total[0][key]
+                    total = total[0][key]
             }
-            resData.total = total || 0
+            resData.data = response || []
+            resData.total = total
             return res.status(200).send({ code: 200, msg: '操作成功！', data: resData })
         })
         .catch(err => {
@@ -41,7 +42,7 @@ app.get('/inventoryAlert', (req, res) => {
 /**
  * insert
  */
-app.post('/inventoryAlert', (req, res) => {
+app.post('/role', (req, res) => {
     let params = req.body || {}
     let resData = {}
     // add createTime
@@ -60,7 +61,7 @@ app.post('/inventoryAlert', (req, res) => {
 /**
  * update
  */
-app.put('/inventoryAlert', (req, res) => {
+app.put('/role', (req, res) => {
     let params = req.body || {}
     let resData = {}
     let id = params.id
@@ -80,7 +81,7 @@ app.put('/inventoryAlert', (req, res) => {
 /**
  * delete
  */
-app.delete('/inventoryAlert', (req, res) => {
+app.delete('/role', (req, res) => {
     let params = req.body || {}
     let resData = {}
     let id = params.id

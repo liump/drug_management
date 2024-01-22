@@ -1,8 +1,8 @@
 /**
  * drug bigScreen modules
  */
-const app = require('./app.js')
-const MyDB = require('./MyDB.js')
+const app = require('../app.js')
+const MyDB = require('../MyDB.js')
 
 /**
  * select alert

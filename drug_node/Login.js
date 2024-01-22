@@ -13,7 +13,7 @@ const SECRET_KEY = 'login2023'
 app.post('/login', async (req, res) => {
   let params = req.body || {}
   let resData = {}
-  let selectColumn = ['userName', 'nickName', 'role', 'createTime', 'lastLoginTime', 'remark']
+  let selectColumn = ['id', 'userName', 'nickName', 'role', 'createTime', 'lastLoginTime', 'remark']
   
   // 校验密码, 如果校验成功, 生成jwt
   MyDB(TB_NAME)

@@ -119,3 +119,55 @@ MyDB.schema.hasTable('tb_drug_inventory_alert')
 			});
 		}
 	});
+
+
+// 创建表 药品明细表
+MyDB.schema.hasTable('tb_drug_detail')  // 查看数据库中是否已经存在 tb_drug_detail 表
+	.then(function (exists) {
+		if (exists == false) {
+			// 如果 tb_drug_detail 表不存在就创建它    
+			return MyDB.schema.createTable('tb_drug_detail', function (table) {
+				// 创建 tb_drug_detail 表      
+				table.increments();
+				table.string('drugCode'); // 药品码
+				table.string('imgUrl'); // 图片
+				table.string('price'); // 价格
+				table.string('createTime'); // 创建时间
+				table.string('remark'); // 备注
+			});
+		}
+	});
+
+// 创建表 订单表
+MyDB.schema.hasTable('tb_drug_order')  // 查看数据库中是否已经存在 tb_drug_order 表
+	.then(function (exists) {
+		if (exists == false) {
+			// 如果 tb_drug_order 表不存在就创建它    
+			return MyDB.schema.createTable('tb_drug_order', function (table) {
+				// 创建 tb_drug_order 表      
+				table.increments();
+				table.string('orderCode'); // 订单码
+				table.string('userId'); // 用户ID
+				table.string('drugCode'); // 药品码
+				table.string('price'); // 价格
+				table.string('createTime'); // 创建时间
+				table.string('remark'); // 备注
+			});
+		}
+	});
+
+	// 创建表 药品明细表
+MyDB.schema.hasTable('tb_shopping_cart')  // 查看数据库中是否已经存在 tb_shopping_cart 表
+.then(function (exists) {
+	if (exists == false) {
+		// 如果 tb_shopping_cart 表不存在就创建它    
+		return MyDB.schema.createTable('tb_shopping_cart', function (table) {
+			// 创建 tb_shopping_cart 表      
+			table.increments();
+			table.string('userId'); // 用户ID
+			table.string('drugCode'); // 药品码
+			table.string('createTime'); // 创建时间
+			table.string('remark'); // 备注
+		});
+	}
+});

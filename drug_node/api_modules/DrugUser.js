@@ -1,8 +1,8 @@
 /**
  * drug user modules
  */
-const app = require('./app.js')
-const MyDB = require('./MyDB.js')
+const app = require('../app.js')
+const MyDB = require('../MyDB.js')
 const dayjs = require('dayjs')
 
 const TB_NAME = 'tb_user'
