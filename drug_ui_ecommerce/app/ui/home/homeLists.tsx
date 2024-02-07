@@ -2,11 +2,12 @@
 import { useState, Fragment, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { axios } from '@/app/utils/request'
-
+import { message } from 'antd';
 
 function HomeLists() {
+    const [messageApi, contextHolder] = message.useMessage();
     const [isOpen, setIsOpen] = useState(false)
-    const [dialogObj, setDialogObj] = useState({
+    const [dialogObj, setDialogObj] = useState<any>({
         id: '',
         name: '',
         href: '',
@@ -41,15 +42,15 @@ function HomeLists() {
         })
             .then((res: any) => {
                 res = res.data || {}
-                console.log("🚀 ~ useEffect ~ res:", res)
                 let list = res.map((el: any, index: number) => {
                     const obj = {
                         id: index,
                         name: el.drugName,
+                        drugCode: el.drugCode,
                         href: '#',
                         imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
                         imageAlt: el.drugName,
-                        price: '¥35',
+                        price: '¥' + (el.price || 0),
                         color: el.dosage,
                     }
                     return obj
@@ -75,8 +76,21 @@ function HomeLists() {
         handleListInfo()
     }, [])
 
+    function handleAddShoppingCart() {
+        const params = { drugCode: dialogObj.drugCode }
+        axios({
+            url: '/shoppingCart',
+            method: 'post',
+            data: params
+        }).then((res: any) => {
+            messageApi.success(res.msg)
+            setIsOpen(false)
+        })
+    }
+
     return (
         <div className="bg-white">
+            {contextHolder}
             <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
                 <h2 className="text-2xl font-bold tracking-tight text-gray-900">热销品</h2>
 
@@ -177,9 +191,9 @@ function HomeLists() {
                                         <button
                                             type="button"
                                             className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                                            onClick={closeModal}
+                                            onClick={() => handleAddShoppingCart()}
                                         >
-                                            确认
+                                            添加到购物车
                                         </button>
                                     </div>
                                 </Dialog.Panel>

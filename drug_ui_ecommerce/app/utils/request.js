@@ -9,6 +9,7 @@ const service = axios.create({
     timeout: 9000 // 请求超时时间
 })
 
+
 // const [messageApi, contextHolder] = message.useMessage();
 
 const err = (error) => {
@@ -33,7 +34,7 @@ const err = (error) => {
                 // messageApi.warning('很抱歉，登录已过期，请重新登录')
                 localStorage.clear('pro__ecommerce__token')
                 setTimeout(() => {
-                    window.location.reload()
+                    location.href = '/login'
                 }, 1500)
                 break
             default:

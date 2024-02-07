@@ -13,7 +13,7 @@ let tableHeader = ref([
     { id: 5, label: '上市许可持有人', prop: 'holder' },
     { id: 6, label: '生产单位', prop: 'productionUnit' },
     { id: 7, label: '药品编码', prop: 'drugCode' },
-    { id: 8, label: '备注', prop: 'remark' },
+    // { id: 8, label: '备注', prop: 'remark' },
 ])
 
 let tableData = ref([
@@ -62,6 +62,7 @@ function handleReset() {
     total.value = 0
     handleSearch()
 }
+
 </script>
 
 <template>

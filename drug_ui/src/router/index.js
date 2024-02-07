@@ -40,6 +40,11 @@ const router = createRouter({
           component: () => import('@/views/DrugOutput/DrugOutput.vue')
         },
         {
+          path: '/drugPrice',
+          name: 'DrugPrice',
+          component: () => import('@/views/DrugPrice/DrugPrice.vue')
+        },
+        {
           path: '/inventoryAlert',
           name: 'InventoryAlert',
           component: () => import('@/views/InventoryAlert/InventoryAlert.vue')

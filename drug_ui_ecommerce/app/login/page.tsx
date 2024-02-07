@@ -16,10 +16,6 @@ export default function Page() {
 
     const router = useRouter()
 
-    // useEffect(() => {
-    //     console.log(1)
-    // })
-
     function handleUserNameChange(e: any) {
         const value = e.target.value
         setUserName(value)
@@ -30,8 +26,6 @@ export default function Page() {
     }
 
     function handleSubmit() {
-        console.log(userName)
-        console.log(userPassword)
         if (userName && userPassword) {
             const params = {
                 userName,

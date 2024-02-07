@@ -1,5 +1,5 @@
 'use client'
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { ListBulletIcon, UserIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 
@@ -12,14 +12,31 @@ export default function UserManagementList() {
         phone: '181xxxxxxxx'
     })
 
+    useEffect(() => {
+        // 获取用户信息
+        try {
+            const userInfo = JSON.parse(localStorage.getItem('pro__ecommerce__userInfo')!)
+            console.log("🚀 ~ useEffect ~ userInfo:", userInfo)
+
+            setUserObj({
+                ...userObj,
+                userId: userInfo.id,
+                userName: userInfo.nickName || userInfo.userName
+            })
+        } catch (error) {
+            console.log("🚀 ~ useEffect ~ error:", error)
+        }
+    }, [])
+
+
     return (
         <div className="">
             <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-4xl lg:px-8">
                 {/* <h2 className="text-3xl font-bold tracking-tight text-gray-900 text-center">我的</h2> */}
                 <div className="text-center space-y-4">
                     <div>{userObj.userName}</div>
-                    <div>{userObj.address}</div>
-                    <div>{userObj.phone}</div>
+                    {/* <div>{userObj.address}</div> */}
+                    {/* <div>{userObj.phone}</div> */}
                 </div>
 
                 <Link href='/orderManagement' className="border rounded w-md mt-8 p-4 flex space-x-4">

@@ -13,7 +13,6 @@ let form = ref({
 })
 
 function handleLogin() {
-    console.log('click', form)
     httpLogin(form.value)
         .then(res => {
             // 保存 token

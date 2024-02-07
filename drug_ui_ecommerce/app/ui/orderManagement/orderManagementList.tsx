@@ -1,7 +1,8 @@
 'use client'
-import { useState, Fragment } from 'react'
+import { useState, Fragment, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { ListBulletIcon, UserIcon } from '@heroicons/react/24/outline'
+import { axios } from '@/app/utils/request'
 
 
 export default function OrderManagementList() {
@@ -12,35 +13,21 @@ export default function OrderManagementList() {
         phone: '181xxxxxxxx'
     })
 
-    let [orderList, setOrderList] = useState([
-        {
-            id: '1',
-            orderCode: 'order-20130103001',
-            createTime: '2024-01-03 12:12:29',
-            price: '¥140',
-            imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg'
-        },
-        {
-            id: '2',
-            orderCode: 'order-20130103002',
-            createTime: '2024-01-03 19:23:32',
-            price: '¥141',
-            imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-02.jpg'
-        },
-        {
-            id: '3',
-            orderCode: 'order-20130103003',
-            createTime: '2024-01-03 19:25:32',
-            price: '¥142',
-            imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-03.jpg'
-        },
+    let [orderList, setOrderList] = useState<any>([
+        // {
+        //     id: '1',
+        //     orderCode: 'order-20130103001',
+        //     createTime: '2024-01-03 12:12:29',
+        //     price: '¥140',
+        //     imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg'
+        // }
     ])
 
     let [dialogObj, setDialogObj] = useState({
         id: '1',
         orderCode: 'order-20130103001',
         createTime: '2024-01-03 12:12:29',
-        price: '¥70',
+        price: '¥140',
         imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
         orderDetails: [
             {
@@ -104,21 +91,57 @@ export default function OrderManagementList() {
 
 
     function handleOpenDialog(orderItems: any) {
-        console.log("🚀 ~ file: orderManagementList.tsx:39 ~ handleOpenDialog ~ orderItems:", orderItems)
         setIsOpen(true)
+        setDialogObj(orderItems)
     }
 
     function handleCloseDialog() {
         setIsOpen(false)
     }
+    useEffect(() => {
+        axios({
+            url: '/orderList',
+            method: 'get'
+        }).then(res => {
+            let data = res.data || []
+            // 拆分数据
+            const obj: any = {}
+            data.forEach((item: any) => {
+                // 图片
+                item.imageSrc = 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg'
+                if (!obj[item.orderCode]) {
+                    obj[item.orderCode] = {
+                        orderCode: item.orderCode,
+                        createTime: item.createTime,
+                        price: '',
+                        imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
+                        orderDetails: [item]
+                    }
+                } else {
+                    obj[item.orderCode].orderDetails.push(item)
+                }
+            })
+            // 总价计算
+            for (const key in obj) {
+                obj[key].price = obj[key].orderDetails.reduce((pre: number, next: any) => pre + parseFloat(next.price), 0)
+            }
+            // 构造数据
+            const _list: any = []
+            for (const key in obj) {
+                _list.push(obj[key])
+            }
+            // console.log('_list', _list)
+            setOrderList(_list)
+        })
+    }, [])
 
     return (
         <div className="">
             <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-4xl lg:px-8">
                 <h2 className="text-3xl font-bold tracking-tight text-gray-900 text-center">订单管理</h2>
                 {
-                    orderList.map(orderItems => (
-                        <div key={orderItems.id} className="border rounded-md w-md mt-8 p-4 flex space-x-4 hover:border-cyan-400 cursor-pointer" onClick={() => handleOpenDialog(orderItems)}>
+                    orderList.map((orderItems: any, index: number) => (
+                        <div key={index} className="border rounded-md w-md mt-8 p-4 flex space-x-4 hover:border-cyan-400 cursor-pointer" onClick={() => handleOpenDialog(orderItems)}>
                             <div className="w-32 h32 flex justify-center items-center">
                                 <img
                                     src={orderItems.imageSrc}
@@ -141,7 +164,7 @@ export default function OrderManagementList() {
                                 <div className="flex space-x-4">
                                     <span>订单总额:</span>
                                     <span className="text-gray-400">
-                                        {orderItems.price}
+                                        ¥ {orderItems.price}
                                     </span>
                                 </div>
                             </div>
@@ -195,7 +218,7 @@ export default function OrderManagementList() {
                                             </div>
                                             <div className="">
                                                 <span className='mr-2'>订单总额:</span>
-                                                <span className='text-gray-600'>{dialogObj.price}</span>
+                                                <span className='text-gray-600'>¥ {dialogObj.price}</span>
                                             </div>
                                             <div className="">
                                                 <span className='mr-2'>订单商品:</span>

@@ -1,12 +1,52 @@
 'use client'
 
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
 import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon, UserIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 
+import { axios } from '@/app/utils/request'
+
 export default function PageHeader() {
     const [open, setOpen] = useState(false)
+    const [isLogin, setIsLogin] = useState(false)
+    const [shoppingCartCount, setShoppingCartCount] = useState(0)
+
+    let [userObj, setUserObj] = useState<any>({
+        userId: 'user-1',
+        userName: 'liump',
+    })
+
+    useEffect(() => {
+        // 获取用户信息
+        try {
+            const userInfo = JSON.parse(localStorage.getItem('pro__ecommerce__userInfo')!)
+
+            setUserObj({
+                ...userObj,
+                userId: userInfo.id,
+                userName: userInfo.nickName || userInfo.userName
+            })
+
+            if (userInfo) {
+                setIsLogin(true)
+            } else {
+                setIsLogin(false)
+            }
+        } catch (error) {
+            console.log("🚀 ~ useEffect ~ error:", error)
+        }
+    }, [])
+
+    useEffect(() => {
+        axios({
+            url: '/shoppingCart',
+            method: 'get'
+        }).then((res: any) => {
+            let data = res?.data?.data || []
+            setShoppingCartCount(data.length || 0)
+        })
+    }, [])
 
     return (
         <div className="bg-white">
@@ -48,18 +88,22 @@ export default function PageHeader() {
                                     </button>
                                 </div>
 
-                                <div className="space-y-6 border-t border-gray-200 px-4 py-6">
-                                    <div className="flow-root">
-                                        <Link href="/login" className="-m-2 block p-2 font-medium text-gray-900">
-                                            登录
-                                        </Link>
+                                {
+                                    !isLogin
+                                    &&
+                                    <div className="space-y-6 border-t border-gray-200 px-4 py-6">
+                                        <div className="flow-root">
+                                            <Link href="/login" className="-m-2 block p-2 font-medium text-gray-900">
+                                                登录
+                                            </Link>
+                                        </div>
+                                        <div className="flow-root">
+                                            <Link href="/register" className="-m-2 block p-2 font-medium text-gray-900">
+                                                注册
+                                            </Link>
+                                        </div>
                                     </div>
-                                    <div className="flow-root">
-                                        <Link href="/register" className="-m-2 block p-2 font-medium text-gray-900">
-                                            注册
-                                        </Link>
-                                    </div>
-                                </div>
+                                }
 
                             </Dialog.Panel>
                         </Transition.Child>
@@ -96,15 +140,19 @@ export default function PageHeader() {
                             <Link href="/home" className='ml-4 hover:text-blue-400'>首页</Link>
 
                             <div className="ml-auto flex items-center">
-                                <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                                    <Link href="/login" className="text-sm font-medium text-gray-700 hover:text-gray-800">
-                                        登录
-                                    </Link>
-                                    <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
-                                    <Link href="/register" className="text-sm font-medium text-gray-700 hover:text-gray-800">
-                                        注册
-                                    </Link>
-                                </div>
+                                {
+                                    !isLogin
+                                    &&
+                                    <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                                        <Link href="/login" className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                                            登录
+                                        </Link>
+                                        <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
+                                        <Link href="/register" className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                                            注册
+                                        </Link>
+                                    </div>
+                                }
 
                                 {/* Search */}
                                 <div className="flex lg:ml-6">
@@ -121,7 +169,7 @@ export default function PageHeader() {
                                             className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                                             aria-hidden="true"
                                         />
-                                        <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">0</span>
+                                        <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">{shoppingCartCount}</span>
                                         <span className="sr-only">items in cart, view bag</span>
                                     </Link>
                                 </div>
@@ -134,15 +182,17 @@ export default function PageHeader() {
                                             className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                                             aria-hidden="true"
                                         />
-                                    </Link>
+                                        <span className='ml-2'>欢迎您! {userObj.userName}</span>
+                                </Link>
 
-                                </div>
+
                             </div>
                         </div>
                     </div>
-                </nav>
-            </header>
+                </div>
+            </nav>
+        </header>
 
-        </div>
+        </div >
     )
 }

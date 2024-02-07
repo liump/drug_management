@@ -27,6 +27,7 @@ app.use(
     .unless({
       path: [
         '/login', // 登录页无需校验
+        '/user',// 注册也无需校验
         '/bigScreen/outputTop10',
         '/bigScreen/input',
         '/bigScreen/catelogue',
