@@ -4,6 +4,13 @@
 
 数字化管控药品库存，实时掌控库存量，便于入库、出库、取药
 
+## 效果图
+![药品库存管理系统-药品分类](./images/药品库存管理系统-药品分类.png)
+药品库存管理系统-药品分类
+
+![药品库存管理系统-可视化大屏](./images/药品库存管理系统-可视化大屏.png)
+药品库存管理系统-可视化大屏
+
 ## 需求分析
 ### 模块拆分
 1. 人员管理
@@ -67,8 +74,8 @@ id, drugName, drugCode, total, createTime, remark
 8. 可视化大屏 （库存预警、入库信息、出库信息、库存类别、出库Top10） 
 
 ## 大屏设计
-[柱状图-入库信息 demo1.js](https://www.isqqw.com/viewer?id=42996)
-[柱状图-出库信息 demo2.js](https://www.isqqw.com/viewer?id=42770)
-[柱状图-出库Top10 demo3.js](https://www.isqqw.com/viewer?id=42728)
-[饼图-库存类别 demo4.js](https://www.isqqw.com/viewer?id=42129)
-[柱状图-库存预警 demo5.js](https://www.isqqw.com/viewer?id=42368)
+[柱状图-入库信息 demo1.js](https://www.isqqw.com/viewer?id=42996)  
+[柱状图-出库信息 demo2.js](https://www.isqqw.com/viewer?id=42770)  
+[柱状图-出库Top10 demo3.js](https://www.isqqw.com/viewer?id=42728)  
+[饼图-库存类别 demo4.js](https://www.isqqw.com/viewer?id=42129)  
+[柱状图-库存预警 demo5.js](https://www.isqqw.com/viewer?id=42368)  
